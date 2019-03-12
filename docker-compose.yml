@@ -1,0 +1,65 @@
+version: '3.5'
+networks:
+  microservice:
+    external:
+      name: microservice
+  apm:
+    external:
+      name: apm
+
+services:
+  rabbitmq-node1:
+    restart: always
+    image: rabbitmq:3-management
+    deploy:
+     replicas: 1
+     restart_policy:
+      condition: on-failure
+    ports:
+     - "15672:15672"
+     - "5672:5672"
+    volumes:
+      - /mnt/rabbitmq/node2:/var/lib/rabbitmq
+    networks:
+      - apm
+      - microservice
+    environment:     
+     - SERVICE_NAME=rabbitmq
+     - SERVICE_TAGS=rabbitmq
+     - SERVICE_REGION=DC1
+     - SERVICE_CHECK_INITIAL_STATUS=passing
+     - SERVICE_80_CHECK_HTTP=/healthcheck
+     - SERVICE_80_CHECK_INTERVAL=15s
+     - SERVICE_80_CHECK_TIMEOUT=15s
+     - RABBITMQ_DEFAULT_USER=admin
+     - RABBITMQ_DEFAULT_PASS=Passw0rd
+     - RABBITMQ_ERLANG_COOKIE='rabbitmq_secret_coookie'
+     - RABBITMQ_NODENAME=rabbitmq@rabbitmq-node1
+     - RABBITMQ_DEFAULT_VHOST=/
+  rabbitmq-node2:
+    restart: always
+    image: rabbitmq:3-management
+    deploy:
+     replicas: 1
+     restart_policy:
+      condition: on-failure
+    ports:     
+     - "5673:5673"
+    volumes:
+      - /mnt/rabbitmq/node2:/var/lib/rabbitmq
+    networks:
+      - apm
+      - microservice
+    environment:     
+     - SERVICE_NAME=rabbitmq
+     - SERVICE_TAGS=rabbitmq
+     - SERVICE_REGION=DC1
+     - SERVICE_CHECK_INITIAL_STATUS=passing
+     - SERVICE_80_CHECK_HTTP=/healthcheck
+     - SERVICE_80_CHECK_INTERVAL=15s
+     - SERVICE_80_CHECK_TIMEOUT=15s
+     - RABBITMQ_DEFAULT_USER=admin
+     - RABBITMQ_DEFAULT_PASS=Passw0rd
+     - RABBITMQ_ERLANG_COOKIE='rabbitmq_secret_coookie'
+     - RABBITMQ_NODENAME=rabbitmq@rabbitmq-node2
+     - RABBITMQ_DEFAULT_VHOST=/
