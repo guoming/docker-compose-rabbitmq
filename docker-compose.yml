@@ -1,4 +1,9 @@
 version: '3.5'
+networks:
+  rabbitmq:
+    external:
+      name: rabbitmq
+
 services:
   rabbitmq-node1:
     restart: always
@@ -10,6 +15,8 @@ services:
     ports:
      - "15672:15672"
      - "5672:5672"
+    networks:
+      - rabbitmq
     environment:     
      - SERVICE_NAME=rabbitmq
      - SERVICE_TAGS=rabbitmq
@@ -28,6 +35,8 @@ services:
       condition: on-failure
     ports:     
      - "5673:5673"
+    networks:
+      - rabbitmq
     environment:     
      - SERVICE_NAME=rabbitmq
      - SERVICE_TAGS=rabbitmq
