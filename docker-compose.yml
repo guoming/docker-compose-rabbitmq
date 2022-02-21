@@ -12,6 +12,10 @@ services:
      replicas: 1
      restart_policy:
       condition: on-failure
+     resources:
+        limits:
+          cpus: '0.1'
+          memory: "256M" 
     ports:
      - "15672:15672"
      - "5672:5672"
@@ -33,6 +37,10 @@ services:
      replicas: 1
      restart_policy:
       condition: on-failure
+     resources:
+        limits:
+          cpus: '0.1'
+          memory: "256M" 
     ports:     
      - "5673:5673"
     networks:
